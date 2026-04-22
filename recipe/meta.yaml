@@ -18,7 +18,7 @@ source:
 
 build:
   number: {{ build }}
-  skip: true  # [py < 310 or py > 313 or osx or ppc64le or not (cuda_compiler_version or "").startswith("13.1")]
+  skip: true  # [py < 310 or py > 314 or osx or ppc64le or not (cuda_compiler_version or "").startswith("13.1")]
   # debugging skips:
   # skip: true  # [py != 310]
 
@@ -58,10 +58,7 @@ outputs:
         - cross-python_{{ target_platform }}     # [build_platform != target_platform]
         - python                                 # [build_platform != target_platform]
         - cython >=3.2.0                         # [build_platform != target_platform]
-        - cuda-profiler-api                      # [build_platform != target_platform]
       host:
-        - cuda-bindings {{ cuda_compiler_version }}
-        - cuda-profiler-api
         - cuda-version {{ cuda_compiler_version }}
         - cython >=3.2.0
         - pip
@@ -72,8 +69,8 @@ outputs:
         - cuda-version >=12,<14.0a0
         # pyproject.toml/dependencies
         - cuda-bindings
-        - cuda-core >=0.3.2,<1.0
-        - cuda-pathfinder >=1.3.2,<2.0
+        - cuda-core >=0.4.2,<1.0
+        - cuda-pathfinder >=1.4.4,<2.0
         - numpy >=1.25,<3
         - python
         - pywin32  # [win64]
@@ -91,7 +88,7 @@ outputs:
         - {{ pin_subpackage("nvmath-python-core", max_pin='x.x.x') }}
         # pyproject.toml/project/optional-dependencies/sysctkXX
         - cuda-bindings >=12.9.2,<14,!=13.0.0
-        - cutensor >=2.3.1
+        - cutensor >=2.5.0,<3
         # pyproject.toml/project/optional-dependencies/cuXX
         - cuda-core
         - libcublas
@@ -129,20 +126,27 @@ outputs:
         - pytest tests/example_tests/sparse_tests/ -k "example01" -v -ra  # [is_gpu_available]
         - pytest tests/example_tests/tensor_tests/ -k "example01" -v -ra  # [is_gpu_available]
 
+  - name: numbath-python-numba
+    requirements:
+      run:
+        - {{ pin_subpackage("nvmath-python", max_pin='x.x.x') }}
+        # pyproject.toml/project/optional-dependencies/numba
+        - numba
+        - numba-cuda >=0.28.1
+
   - name: nvmath-python-dx
     build:
       force_ignore_keys:
         - pytorch
     requirements:
       run:
-        - {{ pin_subpackage("nvmath-python-core", max_pin='x.x.x') }}
         - {{ pin_subpackage("nvmath-python", max_pin='x.x.x') }}
-        - nvmath-python
+        - {{ pin_subpackage("nvmath-python-numba", max_pin='x.x.x') }}
         # pyproject.toml/project/optional-dependencies/dx
         - numba
         - numba-cuda
         # pyproject.toml/project/optional-dependencies/cu12-dx
-        - libmathdx >=0.3.1,<0.4.0
+        - libmathdx >=0.3.1,<0.4.0,!=0.3.1.8
         - cuda-cccl >12.4.127
         - cuda-nvrtc !=12.4.*,!=12.5.0
         # Device APIs need headers for JIT compile
@@ -219,9 +223,9 @@ outputs:
       run:
         - {{ pin_subpackage("nvmath-python-core", max_pin='x.x.x') }}
         - {{ pin_subpackage("nvmath-python", max_pin='x.x.x') }}
-        - mpi4py
-        - nccl >=2.24.3
-        - libcublasmp >=0.6.0
+        - nccl >=2.29.2
+        - nccl4py
+        - libcublasmp >=0.8.1,<1
         - libcufftmp
         - libnvshmem3 >=3.2.5
     test:

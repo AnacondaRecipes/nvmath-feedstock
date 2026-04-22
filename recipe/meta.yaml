@@ -126,7 +126,7 @@ outputs:
         - pytest tests/example_tests/sparse_tests/ -k "example01" -v -ra  # [is_gpu_available]
         - pytest tests/example_tests/tensor_tests/ -k "example01" -v -ra  # [is_gpu_available]
 
-  - name: numbath-python-numba
+  - name: nvmath-python-numba
     requirements:
       run:
         - {{ pin_subpackage("nvmath-python", max_pin='x.x.x') }}

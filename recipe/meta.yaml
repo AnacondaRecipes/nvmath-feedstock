@@ -18,7 +18,7 @@ source:
 
 build:
   number: {{ build }}
-  skip: true  # [py < 310 or py > 314 or osx or ppc64le or not (cuda_compiler_version or "").startswith("13.1")]
+  skip: true  # [py < 310 or py > 314 or osx or ppc64le or not (cuda_compiler_version or "").startswith("13")]
   # debugging skips:
   # skip: true  # [py != 310]
 

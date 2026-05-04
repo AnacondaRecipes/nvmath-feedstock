@@ -71,87 +71,87 @@ Current build status
         <table>
           <thead><tr><th>Variant</th><th>Status</th></tr></thead>
           <tbody><tr>
-              <td>linux_64_cuda_compiler_version13.1python3.10.____cpython</td>
+              <td>linux_64_cuda_compiler_version13.2python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.1python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.2python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_cuda_compiler_version13.1python3.11.____cpython</td>
+              <td>linux_64_cuda_compiler_version13.2python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.1python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.2python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_cuda_compiler_version13.1python3.12.____cpython</td>
+              <td>linux_64_cuda_compiler_version13.2python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.1python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.2python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_64_cuda_compiler_version13.1python3.13.____cp313</td>
+              <td>linux_64_cuda_compiler_version13.2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.1python3.13.____cp313" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_64_cuda_compiler_version13.2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_cuda_compiler_version13.1python3.10.____cpython</td>
+              <td>linux_aarch64_cuda_compiler_version13.2python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.1python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.2python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_cuda_compiler_version13.1python3.11.____cpython</td>
+              <td>linux_aarch64_cuda_compiler_version13.2python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.1python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.2python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_cuda_compiler_version13.1python3.12.____cpython</td>
+              <td>linux_aarch64_cuda_compiler_version13.2python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.1python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.2python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>linux_aarch64_cuda_compiler_version13.1python3.13.____cp313</td>
+              <td>linux_aarch64_cuda_compiler_version13.2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.1python3.13.____cp313" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=linux&configuration=linux%20linux_aarch64_cuda_compiler_version13.2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>win_64_cuda_compiler_version13.1python3.10.____cpython</td>
+              <td>win_64_cuda_compiler_version13.2python3.10.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.1python3.10.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.2python3.10.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>win_64_cuda_compiler_version13.1python3.11.____cpython</td>
+              <td>win_64_cuda_compiler_version13.2python3.11.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.1python3.11.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.2python3.11.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>win_64_cuda_compiler_version13.1python3.12.____cpython</td>
+              <td>win_64_cuda_compiler_version13.2python3.12.____cpython</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.1python3.12.____cpython" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.2python3.12.____cpython" alt="variant">
                 </a>
               </td>
             </tr><tr>
-              <td>win_64_cuda_compiler_version13.1python3.13.____cp313</td>
+              <td>win_64_cuda_compiler_version13.2python3.13.____cp313</td>
               <td>
                 <a href="https://dev.azure.com/conda-forge/feedstock-builds/_build/latest?definitionId=23006&branchName=main">
-                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.1python3.13.____cp313" alt="variant">
+                  <img src="https://dev.azure.com/conda-forge/feedstock-builds/_apis/build/status/nvmath-feedstock?branchName=main&jobName=win&configuration=win%20win_64_cuda_compiler_version13.2python3.13.____cp313" alt="variant">
                 </a>
               </td>
             </tr>
@@ -172,6 +172,7 @@ Current release info
 | [![Conda Recipe](https://img.shields.io/badge/recipe-nvmath--python--cpu-green.svg)](https://anaconda.org/conda-forge/nvmath-python-cpu) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/nvmath-python-cpu.svg)](https://anaconda.org/conda-forge/nvmath-python-cpu) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/nvmath-python-cpu.svg)](https://anaconda.org/conda-forge/nvmath-python-cpu) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/nvmath-python-cpu.svg)](https://anaconda.org/conda-forge/nvmath-python-cpu) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-nvmath--python--distributed-green.svg)](https://anaconda.org/conda-forge/nvmath-python-distributed) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/nvmath-python-distributed.svg)](https://anaconda.org/conda-forge/nvmath-python-distributed) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/nvmath-python-distributed.svg)](https://anaconda.org/conda-forge/nvmath-python-distributed) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/nvmath-python-distributed.svg)](https://anaconda.org/conda-forge/nvmath-python-distributed) |
 | [![Conda Recipe](https://img.shields.io/badge/recipe-nvmath--python--dx-green.svg)](https://anaconda.org/conda-forge/nvmath-python-dx) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/nvmath-python-dx.svg)](https://anaconda.org/conda-forge/nvmath-python-dx) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/nvmath-python-dx.svg)](https://anaconda.org/conda-forge/nvmath-python-dx) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/nvmath-python-dx.svg)](https://anaconda.org/conda-forge/nvmath-python-dx) |
+| [![Conda Recipe](https://img.shields.io/badge/recipe-nvmath--python--numba-green.svg)](https://anaconda.org/conda-forge/nvmath-python-numba) | [![Conda Downloads](https://img.shields.io/conda/dn/conda-forge/nvmath-python-numba.svg)](https://anaconda.org/conda-forge/nvmath-python-numba) | [![Conda Version](https://img.shields.io/conda/vn/conda-forge/nvmath-python-numba.svg)](https://anaconda.org/conda-forge/nvmath-python-numba) | [![Conda Platforms](https://img.shields.io/conda/pn/conda-forge/nvmath-python-numba.svg)](https://anaconda.org/conda-forge/nvmath-python-numba) |
 
 Installing nvmath
 =================
@@ -183,16 +184,16 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
-Once the `conda-forge` channel has been enabled, `nvmath-python, nvmath-python-core, nvmath-python-cpu, nvmath-python-distributed, nvmath-python-dx` can be installed with `conda`:
+Once the `conda-forge` channel has been enabled, `nvmath-python, nvmath-python-core, nvmath-python-cpu, nvmath-python-distributed, nvmath-python-dx, nvmath-python-numba` can be installed with `conda`:
 
 ```
-conda install nvmath-python nvmath-python-core nvmath-python-cpu nvmath-python-distributed nvmath-python-dx
+conda install nvmath-python nvmath-python-core nvmath-python-cpu nvmath-python-distributed nvmath-python-dx nvmath-python-numba
 ```
 
 or with `mamba`:
 
 ```
-mamba install nvmath-python nvmath-python-core nvmath-python-cpu nvmath-python-distributed nvmath-python-dx
+mamba install nvmath-python nvmath-python-core nvmath-python-cpu nvmath-python-distributed nvmath-python-dx nvmath-python-numba
 ```
 
 It is possible to list all of the versions of `nvmath-python` available on your platform with `conda`:

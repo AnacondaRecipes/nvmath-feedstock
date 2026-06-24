@@ -271,6 +271,10 @@ outputs:
       dev_url: https://github.com/NVIDIA/nvmath-python
 
   - name: nvmath-python-install-test-12
+    build:
+      # Enable install tests outputs on rebuild and make sure to run the tests.
+      # No need to upload them to the main channel, so disable when the work is completed.
+      skip: true
     requirements:
       run:
         - cuda-version 12.*
@@ -289,6 +293,10 @@ outputs:
         - nvmath.tensor
 
   - name: nvmath-python-install-test-13
+    build:
+      # Enable install tests outputs on rebuild and make sure to run the tests.
+      # No need to upload them to the main channel, so disable when the work is completed.
+      skip: true
     requirements:
       run:
         - cuda-version 13.*

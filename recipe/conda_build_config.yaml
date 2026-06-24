@@ -1,4 +1,0 @@
-is_gpu_available:
-  - false
-# For testing locally
-  # - true

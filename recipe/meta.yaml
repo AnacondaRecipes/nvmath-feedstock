@@ -18,9 +18,7 @@ source:
 
 build:
   number: {{ build }}
-  skip: true  # [py < 310 or py > 314 or osx or ppc64le or not (cuda_compiler_version or "").startswith("13")]
-  # debugging skips:
-  # skip: true  # [py != 310]
+  skip: true  # [py<310 or py>314 or osx or not (cuda_compiler_version or "").startswith("13")]
 
 # Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:
@@ -55,16 +53,13 @@ outputs:
         - {{ compiler('cxx') }}
         - {{ compiler('cuda') }}
         - {{ stdlib('c') }}
-        - cross-python_{{ target_platform }}     # [build_platform != target_platform]
-        - python                                 # [build_platform != target_platform]
-        - cython >=3.2.0                         # [build_platform != target_platform]
       host:
         - cuda-version {{ cuda_compiler_version }}
         - cython >=3.2.0
         - pip
         - python
         - setuptools >=77.0.3
-        - tomli >=2.0.1  # [py < 311]
+        - tomli >=2.0.1  # [py<311]
       run:
         - cuda-version >=12,<14.0a0
         # pyproject.toml/dependencies
@@ -106,12 +101,15 @@ outputs:
         - examples/sparse
         - examples/tensor
         - tests/example_tests
+        - tests/nvmath_tests
       requires:
         - cupy
         - pip
         - pytest
-        - pytorch  # [not win]
-        - pytorch-gpu  # [not win and is_gpu_available]
+        # We don't compile pytorch against CC 7.5 on linux-aarch64. However, our linux-aarch64 CI runner supports max CC 7.5 (Nvidia T4G).
+        # So, do not install pytorch on linux-aarch64 and the tests will automatically skip.
+        #- pytorch =*=cpu_*  # [aarch64]
+        - pytorch-gpu  # [not aarch64]
         - scipy
       imports:
         - nvmath
@@ -121,10 +119,10 @@ outputs:
         - nvmath.tensor
       commands:
         - pip check
-        - pytest tests/example_tests/matmul_tests/ -k "example01 and not cpu" -v -ra  # [is_gpu_available]
-        - pytest tests/example_tests/fft_tests/ -k "example01 and not (cpu or callback)" -v -ra  # [is_gpu_available]
-        - pytest tests/example_tests/sparse_tests/ -k "example01" -v -ra  # [is_gpu_available]
-        - pytest tests/example_tests/tensor_tests/ -k "example01" -v -ra  # [is_gpu_available]
+        - pytest tests/example_tests/matmul_tests/ -k "example01 and not cpu" -v -ra
+        - pytest tests/example_tests/fft_tests/ -k "example01 and not (cpu or callback)" -v -ra
+        - pytest tests/example_tests/sparse_tests/ -k "example01" -v -ra
+        - pytest tests/example_tests/tensor_tests/ -k "example01" -v -ra
 
   - name: nvmath-python-numba
     requirements:
@@ -154,31 +152,37 @@ outputs:
     test:
       requires:
         - pip
-        - pytest  # [is_gpu_available]
-        - cccl-python  # [is_gpu_available]
-        - cffi  # [is_gpu_available]
+        - pytest
+        - cccl-python
+        - cffi
         - cupy
-        - scipy  # [win]
+        - scipy
+        - psutil
       source_files:
         - examples/device
+        - examples/fft/common.py
         - examples/fft/*callback*.py
         - tests/example_tests
+        - tests/nvmath_tests
       imports:
-        - nvmath.device  # [is_gpu_available]
+        - nvmath.device
         - nvmath
         - nvmath.fft
         - nvmath.linalg
         - nvmath.sparse
       commands:
         - pip check
-        - pytest tests/example_tests/device_tests/ -v -ra -k "fp or curand"  # [is_gpu_available]
-        - pytest tests/example_tests/fft_tests/ -k "callback" -v -ra  # [is_gpu_available]
+        - pytest tests/example_tests/device_tests/ -v -ra -k "fp or curand"
+        - pytest tests/example_tests/fft_tests/ -k "callback" -v -ra
     about:
       license: Apache-2.0
       license_file: LICENSE
+      license_family: Apache
       summary: Install this meta-package to use nvmath-python device features
       description: >-
         This is a meta-package which installs a some optional dependencies. The main package is nvmath-python.
+      doc_url: https://docs.nvidia.com/cuda/nvmath-python
+      dev_url: https://github.com/NVIDIA/nvmath-python
 
   - name: nvmath-python-cpu
     build:
@@ -195,24 +199,33 @@ outputs:
         - examples/fft/example*cpu_execution.py
         - examples/linalg/generic/matmul/example*cpu*.py
         - tests/example_tests
+        - tests/nvmath_tests
       requires:
         - pip
         - pytest
-        - pytorch  # [not win]
+        # We don't compile pytorch against CC 7.5 on linux-aarch64. However, our linux-aarch64 CI runner supports max CC 7.5 (Nvidia T4G).
+        # So, do not install pytorch on linux-aarch64 and the tests will automatically skip.
+        #- pytorch =*=cpu_*  # [aarch64]
+        - pytorch  # [not aarch64]
       imports:
         - nvmath
         - nvmath.fft
         - nvmath.linalg
       commands:
         - pip check
-        - pytest tests/example_tests/fft_tests/ -k cpu -v -ra  # [is_gpu_available]
-        - pytest tests/example_tests/matmul_tests/ -k cpu -v -ra  # [is_gpu_available]
+        # The tests strictly require a CUDA-enabled pytorch version.
+        # Skip linux-aarch64 builds due to pytorch-gpu not supporting CC 7.5 (see above comment).
+        - pytest tests/example_tests/fft_tests/ -k cpu -v -ra     # [not aarch64]
+        - pytest tests/example_tests/matmul_tests/ -k cpu -v -ra  # [not aarch64]
     about:
       license: Apache-2.0
       license_file: LICENSE
+      license_family: Apache
       summary: Install this meta-package to use nvmath-python cpu features
       description: >-
         This is a meta-package which installs a some optional dependencies. The main package is nvmath-python.
+      doc_url: https://docs.nvidia.com/cuda/nvmath-python
+      dev_url: https://github.com/NVIDIA/nvmath-python
 
   - name: nvmath-python-distributed
     build:
@@ -232,28 +245,36 @@ outputs:
       source_files:
         - examples/distributed
         - tests/example_tests
+        - tests/nvmath_tests
       requires:
         - pip
         - pytest
-        - pytorch  # [not win]
-        - pytorch-gpu  # [not win and is_gpu_available]
+        # We don't compile pytorch against CC 7.5 on linux-aarch64. However, our linux-aarch64 CI runner supports max CC 7.5 (Nvidia T4G).
+        # So, do not install pytorch on linux-aarch64 and the tests will automatically skip.
+        #- pytorch =*=cpu_*  # [aarch64]
+        - pytorch-gpu  # [not aarch64]
       imports:
         - nvmath
         - nvmath.distributed
         - nvmath.distributed.fft
       commands:
         - pip check
-        # - mpiexec -n 2 pytest tests/example_tests/distributed_tests -v -ra -k "not sync"  # [is_gpu_available]
+        # - mpiexec -n 2 pytest tests/example_tests/distributed_tests -v -ra -k "not sync"
     about:
       license: Apache-2.0
       license_file: LICENSE
+      license_family: Apache
       summary: Install this meta-package to use nvmath-python distributed features
       description: >-
         This is a meta-package which installs a some optional dependencies. The main package is nvmath-python.
+      doc_url: https://docs.nvidia.com/cuda/nvmath-python
+      dev_url: https://github.com/NVIDIA/nvmath-python
 
   - name: nvmath-python-install-test-12
-    build:   # [not is_gpu_available]
-      skip: true  # [not is_gpu_available]
+    build:
+      # Enable install tests outputs on rebuild and make sure to run the tests.
+      # No need to upload them to the main channel, so disable when the work is completed.
+      skip: true
     requirements:
       run:
         - cuda-version 12.*
@@ -272,8 +293,10 @@ outputs:
         - nvmath.tensor
 
   - name: nvmath-python-install-test-13
-    build:   # [not is_gpu_available]
-      skip: true  # [not is_gpu_available]
+    build:
+      # Enable install tests outputs on rebuild and make sure to run the tests.
+      # No need to upload them to the main channel, so disable when the work is completed.
+      skip: true
     requirements:
       run:
         - cuda-version 13.*
@@ -282,7 +305,6 @@ outputs:
         - nvmath-python-dx
         - nvmath-python-distributed  # [not win]
         - cupy
-        # - pytorch-gpu
     test:
       imports:
         - nvmath
@@ -293,13 +315,13 @@ outputs:
         - nvmath.sparse
         - nvmath.tensor
         - cupy
-        - pytorch-gpu
 
 about:
   home: https://developer.nvidia.com/nvmath-python
   license: Apache-2.0
   license_url: https://docs.nvidia.com/cuda/nvmath-python/latest/license.html
   license_file: LICENSE
+  license_family: Apache
   summary: NVIDIA Math Libraries for the Python Ecosystem
   description: >-
     nvmath-python aims to bring the power and performance of the NVIDIA math libraries to the Python ecosystem with intuitive, pythonic APIs. The ultimate goal is to provide users full access to all of the available library features in a variety of execution spaces.

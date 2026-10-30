@@ -312,8 +312,8 @@ outputs:
       force_use_keys:
         - cuda_compiler_version
       # Enable install tests outputs on rebuild and make sure to run the tests.
-      # No need to upload them to the main channel, so disable when the work is completed.
-      #skip: true
+      # No need to publish them to the main channel, so disable when the work is completed.
+      skip: true
     requirements:
       run:
         - cuda-version 12.*
@@ -338,8 +338,8 @@ outputs:
       force_use_keys:
         - cuda_compiler_version
       # Enable install tests outputs on rebuild and make sure to run the tests.
-      # No need to upload them to the main channel, so disable when the work is completed.
-      #skip: true
+      # No need to publish them to the main channel, so disable when the work is completed.
+      skip: true
     requirements:
       run:
         - cuda-version 13.*

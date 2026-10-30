@@ -19,6 +19,8 @@ source:
 build:
   number: {{ build }}
   skip: true  # [py<310 or py>314 or osx or not (cuda_compiler_version or "").startswith("13")]
+  # Temporarily skip win-arm64 due to unavailability of 'cutensor' as of Oct 2026
+  skip: true  # [win and arm64]
 
 # Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:

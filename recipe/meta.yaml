@@ -191,7 +191,8 @@ outputs:
         # numba_cuda and numba_cuda_mlir examples each have their own common_numba.py;
         # sharing one process lets the first-imported one win sys.modules and break the other
         - pytest tests/example_tests/device_tests/ -v -ra -k "(fp or curand) and not mlir"
-        - pytest tests/example_tests/device_tests/ -v -ra -k "(fp or curand) and mlir"
+        # numba-cuda-mlir is only installed on py>=311 (see nvmath-python-numba)
+        - pytest tests/example_tests/device_tests/ -v -ra -k "(fp or curand) and mlir"  # [py>=311]
         - pytest tests/example_tests/fft_tests/ -k "callback" -v -ra
     about:
       license: Apache-2.0
@@ -234,6 +235,7 @@ outputs:
         # The tests strictly require a CUDA-enabled pytorch version.
         # Skip linux-aarch64 builds due to pytorch-gpu not supporting CC 7.5 (see above comment).
         - pytest tests/example_tests/fft_tests/ -k cpu -v -ra     # [not aarch64]
+        # Some samples (e.g. example01_torch_cpu_inputs.py) might need a CUDA device and are skipped when none is available
         - pytest tests/example_tests/matmul_tests/ -k cpu -v -ra  # [not aarch64]
     about:
       license: Apache-2.0
@@ -274,6 +276,11 @@ outputs:
       requires:
         - pip
         - pytest
+        # The tests launch samples with mpiexec (provided by mpich) and need mpi4py, otherwise they are skipped
+        - mpich
+        - mpi4py
+        # Many distributed samples use cupy, otherwise they are skipped
+        - cupy
         # We don't compile pytorch against CC 7.5 on linux-aarch64. However, our linux-aarch64 CI runner supports max CC 7.5 (Nvidia T4G).
         # So, do not install pytorch on linux-aarch64 and the tests will automatically skip.
         - pytorch-gpu  # [not aarch64]
@@ -283,7 +290,11 @@ outputs:
         - nvmath.distributed.fft
       commands:
         - pip check
-        - mpiexec -n 2 pytest tests/example_tests/distributed_tests -v -ra -k "not sync"
+        # Deselect FP8 (needs CC>=8.9) and MXFP8/NVFP4 (need CC>=10.0) samples, our CI runners have CC 7.5 (Nvidia T4/T4G)
+        # Do not wrap pytest in mpiexec: the test helper already launches each sample with mpiexec, and wrapping
+        # it runs every sample in 2 concurrent copies that clash on the same GPU (NVSHMEM init failures)
+        #- mpiexec -n 2 pytest tests/example_tests/distributed_tests -v -ra -k "not sync and not fp8 and not fp4"
+        - pytest tests/example_tests/distributed_tests -v -ra -k "not sync and not fp8 and not fp4"
     about:
       license: Apache-2.0
       license_file: LICENSE

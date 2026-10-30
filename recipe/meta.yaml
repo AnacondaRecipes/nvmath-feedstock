@@ -81,6 +81,10 @@ outputs:
 
   - name: nvmath-python
     build:
+      # PBP builds test-task variants from the keys each output uses. Without cuda_compiler_version the
+      # test task goes to a CPU queue. Side effect: the key is also added to the build hash.
+      force_use_keys:
+        - cuda_compiler_version
       force_ignore_keys:
         - pytorch
     requirements:
@@ -142,6 +146,10 @@ outputs:
 
   - name: nvmath-python-dx
     build:
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       force_ignore_keys:
         - pytorch
     requirements:
@@ -240,6 +248,10 @@ outputs:
   - name: nvmath-python-distributed
     build:
       skip: true  # [win]
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       force_ignore_keys:
         - pytorch
     requirements:
@@ -284,6 +296,10 @@ outputs:
 
   - name: nvmath-python-install-test-12
     build:
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       # Enable install tests outputs on rebuild and make sure to run the tests.
       # No need to upload them to the main channel, so disable when the work is completed.
       #skip: true
@@ -306,6 +322,10 @@ outputs:
 
   - name: nvmath-python-install-test-13
     build:
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       # Enable install tests outputs on rebuild and make sure to run the tests.
       # No need to upload them to the main channel, so disable when the work is completed.
       #skip: true

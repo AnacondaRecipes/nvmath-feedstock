@@ -14,6 +14,9 @@ source:
   - url: https://github.com/NVIDIA/nvmath-python/archive/refs/tags/v{{ ".".join(version.split(".")[:3]) }}.tar.gz
     sha256: 1e97c7957672dc5dc45cd3b61a20f6a4495b4df98fd957586161eff247f9993f
     patches:
+      # Treat missing NVIDIA driver (NVML) as zero devices so tests can be collected without a GPU driver
+      - patches/0001-BUG-driver-load-failure-cpu.patch
+      # Update FFT CPU examples to work on Windows
       - patches/0002-Update-example-for-Windows.patch  # [win]
 
 build:

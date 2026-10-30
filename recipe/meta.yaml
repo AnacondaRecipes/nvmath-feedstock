@@ -1,4 +1,4 @@
-{% set version = "0.9.0" %}
+{% set version = "1.0.0" %}
 {% set build = 0 %}
 
 # {{ PYTHON }} is not resolved properly in multi-output recipes...
@@ -12,13 +12,18 @@ package:
 
 source:
   - url: https://github.com/NVIDIA/nvmath-python/archive/refs/tags/v{{ ".".join(version.split(".")[:3]) }}.tar.gz
-    sha256: 58479b53803ec8590b768f22f6d76558168ba0193bc40cb175001417b9c01e45
+    sha256: 1e97c7957672dc5dc45cd3b61a20f6a4495b4df98fd957586161eff247f9993f
     patches:
+      # Treat missing NVIDIA driver (NVML) as zero devices so tests can be collected without a GPU driver
+      - patches/0001-BUG-driver-load-failure-cpu.patch
+      # Update FFT CPU examples to work on Windows
       - patches/0002-Update-example-for-Windows.patch  # [win]
 
 build:
   number: {{ build }}
   skip: true  # [py<310 or py>314 or osx or not (cuda_compiler_version or "").startswith("13")]
+  # Temporarily skip win-arm64 due to unavailability of 'cutensor' as of Oct 2026
+  skip: true  # [win and arm64]
 
 # Have certain top-level requirements so conda-smithy can render the correct variants
 requirements:
@@ -64,8 +69,8 @@ outputs:
         - cuda-version >=12,<14.0a0
         # pyproject.toml/dependencies
         - cuda-bindings
-        - cuda-core >=0.4.2,<1.0
-        - cuda-pathfinder >=1.4.4,<2.0
+        - cuda-core >=0.5.0,<2
+        - cuda-pathfinder >=1.5.1,<2.0
         - numpy >=1.25,<3
         - python
         - pywin32  # [win64]
@@ -76,6 +81,10 @@ outputs:
 
   - name: nvmath-python
     build:
+      # PBP builds test-task variants from the keys each output uses. Without cuda_compiler_version the
+      # test task goes to a CPU queue. Side effect: the key is also added to the build hash.
+      force_use_keys:
+        - cuda_compiler_version
       force_ignore_keys:
         - pytorch
     requirements:
@@ -89,7 +98,7 @@ outputs:
         - libcublas
         - cuda-nvrtc
         - cuda-cudart
-        - libcudss 0.7.*
+        - libcudss 0.8.*
         - libcufft
         - libcurand
         - libcusolver
@@ -130,10 +139,17 @@ outputs:
         - {{ pin_subpackage("nvmath-python", max_pin='x.x.x') }}
         # pyproject.toml/project/optional-dependencies/numba
         - numba
-        - numba-cuda >=0.28.1
+        - cffi
+        - llvmlite
+        - numba-cuda >=0.28.1,<1
+        - numba-cuda-mlir >=0.4.1,<1  # [py>=311]
 
   - name: nvmath-python-dx
     build:
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       force_ignore_keys:
         - pytorch
     requirements:
@@ -172,7 +188,11 @@ outputs:
         - nvmath.sparse
       commands:
         - pip check
-        - pytest tests/example_tests/device_tests/ -v -ra -k "fp or curand"
+        # numba_cuda and numba_cuda_mlir examples each have their own common_numba.py;
+        # sharing one process lets the first-imported one win sys.modules and break the other
+        - pytest tests/example_tests/device_tests/ -v -ra -k "(fp or curand) and not mlir"
+        # numba-cuda-mlir is only installed on py>=311 (see nvmath-python-numba)
+        - pytest tests/example_tests/device_tests/ -v -ra -k "(fp or curand) and mlir"  # [py>=311]
         - pytest tests/example_tests/fft_tests/ -k "callback" -v -ra
     about:
       license: Apache-2.0
@@ -205,7 +225,6 @@ outputs:
         - pytest
         # We don't compile pytorch against CC 7.5 on linux-aarch64. However, our linux-aarch64 CI runner supports max CC 7.5 (Nvidia T4G).
         # So, do not install pytorch on linux-aarch64 and the tests will automatically skip.
-        #- pytorch =*=cpu_*  # [aarch64]
         - pytorch  # [not aarch64]
       imports:
         - nvmath
@@ -216,6 +235,7 @@ outputs:
         # The tests strictly require a CUDA-enabled pytorch version.
         # Skip linux-aarch64 builds due to pytorch-gpu not supporting CC 7.5 (see above comment).
         - pytest tests/example_tests/fft_tests/ -k cpu -v -ra     # [not aarch64]
+        # Some samples (e.g. example01_torch_cpu_inputs.py) might need a CUDA device and are skipped when none is available
         - pytest tests/example_tests/matmul_tests/ -k cpu -v -ra  # [not aarch64]
     about:
       license: Apache-2.0
@@ -230,6 +250,10 @@ outputs:
   - name: nvmath-python-distributed
     build:
       skip: true  # [win]
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       force_ignore_keys:
         - pytorch
     requirements:
@@ -237,10 +261,13 @@ outputs:
         - {{ pin_subpackage("nvmath-python-core", max_pin='x.x.x') }}
         - {{ pin_subpackage("nvmath-python", max_pin='x.x.x') }}
         - nccl >=2.29.2
-        - nccl4py
-        - libcublasmp >=0.8.1,<1
+        - nccl4py >=0.3.1,<0.4
+        - libcublasmp >=0.8.1,<0.10
         - libcufftmp
+        - libcusolvermp0 >=0.8.0,<0.10
         - libnvshmem3 >=3.2.5
+      run_constrained:
+        - libcublas !=13.0.0.*,!=13.0.1.*
     test:
       source_files:
         - examples/distributed
@@ -249,9 +276,13 @@ outputs:
       requires:
         - pip
         - pytest
+        # The tests launch samples with mpiexec (provided by mpich) and need mpi4py, otherwise they are skipped
+        - mpich
+        - mpi4py
+        # Many distributed samples use cupy, otherwise they are skipped
+        - cupy
         # We don't compile pytorch against CC 7.5 on linux-aarch64. However, our linux-aarch64 CI runner supports max CC 7.5 (Nvidia T4G).
         # So, do not install pytorch on linux-aarch64 and the tests will automatically skip.
-        #- pytorch =*=cpu_*  # [aarch64]
         - pytorch-gpu  # [not aarch64]
       imports:
         - nvmath
@@ -259,7 +290,11 @@ outputs:
         - nvmath.distributed.fft
       commands:
         - pip check
-        # - mpiexec -n 2 pytest tests/example_tests/distributed_tests -v -ra -k "not sync"
+        # Deselect FP8 (needs CC>=8.9) and MXFP8/NVFP4 (need CC>=10.0) samples, our CI runners have CC 7.5 (Nvidia T4/T4G)
+        # Do not wrap pytest in mpiexec: the test helper already launches each sample with mpiexec, and wrapping
+        # it runs every sample in 2 concurrent copies that clash on the same GPU (NVSHMEM init failures)
+        #- mpiexec -n 2 pytest tests/example_tests/distributed_tests -v -ra -k "not sync and not fp8 and not fp4"
+        - pytest tests/example_tests/distributed_tests -v -ra -k "not sync and not fp8 and not fp4"
     about:
       license: Apache-2.0
       license_file: LICENSE
@@ -272,8 +307,12 @@ outputs:
 
   - name: nvmath-python-install-test-12
     build:
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       # Enable install tests outputs on rebuild and make sure to run the tests.
-      # No need to upload them to the main channel, so disable when the work is completed.
+      # No need to publish them to the main channel, so disable when the work is completed.
       skip: true
     requirements:
       run:
@@ -294,8 +333,12 @@ outputs:
 
   - name: nvmath-python-install-test-13
     build:
+      # Use cuda_compiler_version so PBP routes this output's test task to a CUDA queue
+      # (see the comment in nvmath-python)
+      force_use_keys:
+        - cuda_compiler_version
       # Enable install tests outputs on rebuild and make sure to run the tests.
-      # No need to upload them to the main channel, so disable when the work is completed.
+      # No need to publish them to the main channel, so disable when the work is completed.
       skip: true
     requirements:
       run:
@@ -331,6 +374,8 @@ about:
   dev_url: https://github.com/NVIDIA/nvmath-python
 
 extra:
+  skip-lints:
+    - deprecate_license_url
   feedstock-name: nvmath
   recipe-maintainers:
     - conda-forge/cuda
